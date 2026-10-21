@@ -1,0 +1,30 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int n = sc.nextInt();
+        Map<Integer, Integer> freq = new HashMap<>();
+
+        for (int i = 0; i < n; i++) {
+            int id = sc.nextInt();
+            freq.put(id, freq.getOrDefault(id, 0) + 1);
+        }
+
+        int bestId = Integer.MAX_VALUE;
+        int bestFreq = -1;
+
+        for (Map.Entry<Integer, Integer> e : freq.entrySet()) {
+            int id = e.getKey();
+            int count = e.getValue();
+
+            if (count > bestFreq || (count == bestFreq && id < bestId)) {
+                bestFreq = count;
+                bestId = id;
+            }
+        }
+
+        System.out.println("ProductID = " + bestId + ", Frequency = " + bestFreq);
+    }
+}
