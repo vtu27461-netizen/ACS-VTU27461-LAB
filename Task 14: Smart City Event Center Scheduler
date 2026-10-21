@@ -1,0 +1,36 @@
+import java.util.*;
+
+public class Main {
+    static class Event {
+        int s, e;
+        Event(int s, int e) {
+            this.s = s;
+            this.e = e;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int n = sc.nextInt();
+
+        List<Event> events = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            events.add(new Event(sc.nextInt(), sc.nextInt()));
+        }
+
+        events.sort((x, y) -> x.e != y.e ? Integer.compare(x.e, y.e) : Integer.compare(x.s, y.s));
+
+        int count = 0;
+        int lastEnd = Integer.MIN_VALUE;
+
+        for (Event e : events) {
+            if (e.s >= lastEnd) {
+                count++;
+                lastEnd = e.e;
+            }
+        }
+
+        System.out.println("MaximumEvents = " + count);
+    }
+}
