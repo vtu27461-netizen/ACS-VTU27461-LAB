@@ -1,0 +1,57 @@
+import java.util.*;
+
+public class Main {
+    static class Cell {
+        int r, c, t;
+        Cell(int r, int c, int t) {
+            this.r = r;
+            this.c = c;
+            this.t = t;
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int R = sc.nextInt();
+        int C = sc.nextInt();
+        int[][] g = new int[R][C];
+
+        Queue<Cell> q = new ArrayDeque<>();
+        int trees = 0;
+
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                g[i][j] = sc.nextInt();
+                if (g[i][j] == 2) {
+                    q.offer(new Cell(i, j, 0));
+                } else if (g[i][j] == 1) {
+                    trees++;
+                }
+            }
+        }
+
+        int maxTime = 0;
+        int burned = 0;
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+
+        while (!q.isEmpty()) {
+            Cell cur = q.poll();
+            maxTime = Math.max(maxTime, cur.t);
+
+            for (int k = 0; k < 4; k++) {
+                int nr = cur.r + dr[k];
+                int nc = cur.c + dc[k];
+
+                if (nr >= 0 && nr < R && nc >= 0 && nc < C && g[nr][nc] == 1) {
+                    g[nr][nc] = 2;
+                    burned++;
+                    q.offer(new Cell(nr, nc, cur.t + 1));
+                }
+            }
+        }
+
+        System.out.println(burned == trees ? maxTime : -1);
+    }
+}
