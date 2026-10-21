@@ -1,0 +1,61 @@
+import java.util.*;
+
+public class Main {
+    static class Node {
+        int v;
+        Node l, r;
+        Node(int v) { this.v = v; }
+    }
+
+    static Node insert(Node root, int val) {
+        if (root == null) return new Node(val);
+        if (val < root.v) root.l = insert(root.l, val);
+        else if (val > root.v) root.r = insert(root.r, val);
+        return root;
+    }
+
+    static boolean isBST(Node root, long min, long max) {
+        if (root == null) return true;
+        if (root.v <= min || root.v >= max) return false;
+        return isBST(root.l, min, root.v) && isBST(root.r, root.v, max);
+    }
+
+    static Node lca(Node root, int n1, int n2) {
+        if (root == null) return null;
+        if (root.v > n1 && root.v > n2) return lca(root.l, n1, n2);
+        if (root.v < n1 && root.v < n2) return lca(root.r, n1, n2);
+        return root;
+    }
+
+    static void inorder(Node root, List<Integer> res) {
+        if (root == null) return;
+        inorder(root.l, res);
+        res.add(root.v);
+        inorder(root.r, res);
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int n = sc.nextInt();
+        Node root = null;
+        for (int i = 0; i < n; i++) {
+            root = insert(root, sc.nextInt());
+        }
+        int u = sc.nextInt();
+        int v = sc.nextInt();
+
+        System.out.println("BST Validation = " + (isBST(root, Long.MIN_VALUE, Long.MAX_VALUE) ? "SUCCESS" : "FAILURE"));
+        Node ans = lca(root, u, v);
+        System.out.println("LCA = " + (ans != null ? ans.v : -1));
+
+        List<Integer> in = new ArrayList<>();
+        inorder(root, in);
+        System.out.print("Inorder Traversal: ");
+        for (int i = 0; i < in.size(); i++) {
+            if (i > 0) System.out.print(" ");
+            System.out.print(in.get(i));
+        }
+        System.out.println();
+    }
+}
