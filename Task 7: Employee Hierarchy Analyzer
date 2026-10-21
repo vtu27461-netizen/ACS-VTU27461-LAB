@@ -1,0 +1,67 @@
+import java.util.*;
+
+public class Main {
+    static class Node {
+        int v;
+        Node l, r;
+        Node(int v) { this.v = v; }
+    }
+
+    static Node build(int[] a) {
+        if (a.length == 0 || a[0] == -1) return null;
+        Node root = new Node(a[0]);
+        Queue<Node> q = new ArrayDeque<>();
+        q.offer(root);
+        int i = 1;
+
+        while (!q.isEmpty() && i < a.length) {
+            Node cur = q.poll();
+
+            if (i < a.length && a[i] != -1) {
+                cur.l = new Node(a[i]);
+                q.offer(cur.l);
+            }
+            i++;
+
+            if (i < a.length && a[i] != -1) {
+                cur.r = new Node(a[i]);
+                q.offer(cur.r);
+            }
+            i++;
+        }
+        return root;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int n = sc.nextInt();
+        int[] a = new int[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = sc.nextInt();
+        }
+
+        Node root = build(a);
+        if (root == null) {
+            System.out.println("Height = 0\nLevels = 0");
+            return;
+        }
+
+        Queue<Node> q = new ArrayDeque<>();
+        q.offer(root);
+        int levels = 0;
+
+        while (!q.isEmpty()) {
+            int sz = q.size();
+            levels++;
+            for (int i = 0; i < sz; i++) {
+                Node u = q.poll();
+                if (u.l != null) q.offer(u.l);
+                if (u.r != null) q.offer(u.r);
+            }
+        }
+
+        System.out.println("Height = " + (levels - 1));
+        System.out.println("Levels = " + levels);
+    }
+}
