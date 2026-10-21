@@ -1,0 +1,61 @@
+import java.util.*;
+
+public class Main {
+    static class Element implements Comparable<Element> {
+        int val, cityIdx, elemIdx;
+        Element(int val, int cityIdx, int elemIdx) {
+            this.val = val;
+            this.cityIdx = cityIdx;
+            this.elemIdx = elemIdx;
+        }
+        public int compareTo(Element o) {
+            return Integer.compare(this.val, o.val);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int m = sc.nextInt();
+        int k = sc.nextInt();
+
+        List<int[]> lists = new ArrayList<>();
+        PriorityQueue<Element> pq = new PriorityQueue<>();
+
+        for (int i = 0; i < m; i++) {
+            int sz = sc.nextInt();
+            int[] arr = new int[sz];
+            for (int j = 0; j < sz; j++) {
+                arr[j] = sc.nextInt();
+            }
+            lists.add(arr);
+            if (sz > 0) {
+                pq.offer(new Element(arr[0], i, 0));
+            }
+        }
+
+        List<Integer> merged = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            Element top = pq.poll();
+            merged.add(top.val);
+            if (top.elemIdx + 1 < lists.get(top.cityIdx).length) {
+                pq.offer(new Element(lists.get(top.cityIdx)[top.elemIdx + 1], top.cityIdx, top.elemIdx + 1));
+            }
+        }
+
+        System.out.println("Merged:");
+        for (int i = 0; i < merged.size(); i++) {
+            if (i > 0) System.out.print(" ");
+            System.out.print(merged.get(i));
+        }
+        System.out.println();
+
+        System.out.println("TopK:");
+        int total = merged.size();
+        for (int i = total - 1, count = 0; i >= 0 && count < k; i--, count++) {
+            if (count > 0) System.out.print(" ");
+            System.out.print(merged.get(i));
+        }
+        System.out.println();
+    }
+}
