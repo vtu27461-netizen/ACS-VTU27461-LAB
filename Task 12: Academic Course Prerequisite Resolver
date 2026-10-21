@@ -1,0 +1,47 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+
+        List<List<Integer>> adj = new ArrayList<>();
+        for (int i = 0; i <= n; i++) adj.add(new ArrayList<>());
+        int[] indeg = new int[n + 1];
+
+        for (int i = 0; i < m; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            adj.get(u).add(v);
+            indeg[v]++;
+        }
+
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for (int i = 1; i <= n; i++) {
+            if (indeg[i] == 0) pq.offer(i);
+        }
+
+        List<Integer> order = new ArrayList<>();
+        while (!pq.isEmpty()) {
+            int u = pq.poll();
+            order.add(u);
+            for (int v : adj.get(u)) {
+                indeg[v]--;
+                if (indeg[v] == 0) pq.offer(v);
+            }
+        }
+
+        if (order.size() < n) {
+            System.out.println("IMPOSSIBLE");
+        } else {
+            System.out.println("Course Order:");
+            for (int i = 0; i < order.size(); i++) {
+                if (i > 0) System.out.print(" ");
+                System.out.print(order.get(i));
+            }
+            System.out.println();
+        }
+    }
+}
